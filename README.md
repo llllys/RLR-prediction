@@ -32,6 +32,14 @@ pip install -r requirements.txt
 ### Dataset
 We apologize that we are not able to provide Yizhunag dataset due to data privacy requirement.
 
+Please prepare your data according to the paper and put the processed files in /data. You should also modify the class yizhuang_dataset in /datasets/yizhuang_dataset.py.
+
+### Train
+```
+python main.py --mode train --data_root <your_data_root>
+```
+
+
 ## Acknowledgement
 We appreciate the following github repos for their valuable code base:
 [AgentFormer](https://github.com/Khrylx/AgentFormer)
