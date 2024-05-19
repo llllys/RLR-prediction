@@ -17,13 +17,13 @@ The red-light running behavior of two-wheelers presents significant safety conce
 ## Getting started
 ### Installation
 Step 1: Create an python environment
-'''
+```
 conda create --name RLR python=3.9
 conda activate RLR
-'''
+```
 
 Step 2: Install the required packages
-'''pip install -r requirements.txt'''
+```pip install -r requirements.txt```
 
 ### Dataset
 We apologize that we are not able to provide Yizhunag dataset due to data privacy requirement.
