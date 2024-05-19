@@ -25,7 +25,9 @@ conda activate RLR_prediction
 
 Step 2: Install the required packages
 
-```pip install -r requirements.txt```
+```
+pip install -r requirements.txt
+```
 
 ### Dataset
 We apologize that we are not able to provide Yizhunag dataset due to data privacy requirement.
