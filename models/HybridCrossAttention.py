@@ -194,14 +194,11 @@ class HybridCrossAttentionEncoderLayer(Module):
         super().__init__()
         self.self_attn = MultiheadAttention(d_model, nhead, dropout=dropout, batch_first=batch_first,
                                             bias=bias, **factory_kwargs)
-        self.multihead_attn_1 = MultiheadAttention(d_model, nhead, dropout=dropout, batch_first=batch_first,
-                                                 bias=bias, **factory_kwargs)
-        self.multihead_attn_2 = MultiheadAttention(d_model, nhead, dropout=dropout, batch_first=batch_first,
+        self.multihead_attn = MultiheadAttention(d_model, nhead, dropout=dropout, batch_first=batch_first,
                                                  bias=bias, **factory_kwargs)
         # Implementation of Feedforward model
         self.linear1_1 = Linear(d_model, dim_feedforward, bias=bias, **factory_kwargs)
         self.linear1_2 = Linear(d_model, dim_feedforward, bias=bias, **factory_kwargs)
-        self.dropout = Dropout(dropout)
         self.linear2_1 = Linear(dim_feedforward, d_model, bias=bias, **factory_kwargs)
         self.linear2_2 = Linear(dim_feedforward, d_model, bias=bias, **factory_kwargs)
 
@@ -211,9 +208,9 @@ class HybridCrossAttentionEncoderLayer(Module):
         self.norm2_2 = LayerNorm(d_model, eps=layer_norm_eps, **factory_kwargs)
         self.norm3_1 = LayerNorm(d_model, eps=layer_norm_eps, **factory_kwargs)
         self.norm3_2 = LayerNorm(d_model, eps=layer_norm_eps, **factory_kwargs)
-        self.dropout1 = Dropout(dropout)
-        self.dropout2_1 = Dropout(dropout)
-        self.dropout2_2 = Dropout(dropout)
+        self.dropout1_1 = Dropout(dropout)
+        self.dropout1_2 = Dropout(dropout)
+        self.dropout2 = Dropout(dropout)
         self.dropout3_1 = Dropout(dropout)
         self.dropout3_2 = Dropout(dropout)
 
@@ -275,10 +272,10 @@ class HybridCrossAttentionEncoderLayer(Module):
         x2 = memory
         # norm_first = False
         
-        x1 = self.norm2_1(x1 + self._mha_block_1(x1, memory, memory_mask, memory_key_padding_mask, memory_is_causal))
+        x1 = self.norm2_1(x1 + self._mha_block(x1, memory, memory_mask, memory_key_padding_mask, memory_is_causal))
         x1 = self.norm3_1(x1 + self._ff_block_1(x1))
 
-        x2 = self.norm2_2(x2 + self._mha_block_2(x2, tgt, tgt_mask, tgt_key_padding_mask, tgt_is_causal))
+        x2 = self.norm2_2(x2 + self._mha_block(x2, tgt, tgt_mask, tgt_key_padding_mask, tgt_is_causal))
         x2 = self.norm3_2(x2 + self._ff_block_2(x2))
         
         return x1, x2
@@ -286,31 +283,22 @@ class HybridCrossAttentionEncoderLayer(Module):
 
 
     # multihead attention block
-    def _mha_block_1(self, x: Tensor, mem: Tensor,
+    def _mha_block(self, x: Tensor, mem: Tensor,
                    attn_mask: Optional[Tensor], key_padding_mask: Optional[Tensor], is_causal: bool = False) -> Tensor:
-        x = self.multihead_attn_1(x, mem, mem,
+        x = self.multihead_attn(x, mem, mem,
                                 attn_mask=attn_mask,
                                 key_padding_mask=key_padding_mask,
                                 is_causal=is_causal,
                                 need_weights=False)[0]
-        return self.dropout2_1(x)
-
-    def _mha_block_2(self, x: Tensor, mem: Tensor,
-                   attn_mask: Optional[Tensor], key_padding_mask: Optional[Tensor], is_causal: bool = False) -> Tensor:
-        x = self.multihead_attn_2(x, mem, mem,
-                                attn_mask=attn_mask,
-                                key_padding_mask=key_padding_mask,
-                                is_causal=is_causal,
-                                need_weights=False)[0]
-        return self.dropout2_2(x)
+        return self.dropout2(x)
     
     # feed forward block
     def _ff_block_1(self, x: Tensor) -> Tensor:
-        x = self.linear2_1(self.dropout(self.activation(self.linear1_1(x))))
+        x = self.linear2_1(self.dropout1_1(self.activation(self.linear1_1(x))))
         return self.dropout3_1(x)
 
     def _ff_block_2(self, x: Tensor) -> Tensor:
-        x = self.linear2_2(self.dropout(self.activation(self.linear1_2(x))))
+        x = self.linear2_2(self.dropout1_1(self.activation(self.linear1_2(x))))
         return self.dropout3_2(x)
 
 
