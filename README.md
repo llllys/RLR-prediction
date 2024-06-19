@@ -30,7 +30,7 @@ pip install -r requirements.txt
 ```
 
 ### Dataset
-We apologize that we are not able to provide Yizhunag dataset due to data privacy requirement.
+We apologize that we are not able to provide Yizhuang dataset due to data privacy requirement.
 
 Please prepare your data according to the paper and put the processed files in /data. You should also modify the class yizhuang_dataset in /datasets/yizhuang_dataset.py.
 
