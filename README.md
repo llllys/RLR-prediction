@@ -16,7 +16,7 @@ The red-light running behavior of two-wheelers presents significant safety conce
 
 ## Getting started
 ### Installation
-Step 1: Create an python environment
+Step 1: Create a python environment
 
 ```
 conda create --name RLR_prediction python=3.9
