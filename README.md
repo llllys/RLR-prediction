@@ -43,3 +43,16 @@ python main.py --mode train --data_root <your_data_root>
 ## Acknowledgement
 We appreciate the following github repos for their valuable code base:
 [AgentFormer](https://github.com/Khrylx/AgentFormer)
+
+## Citation
+If you find this work useful in your research, please consider cite:
+```
+@article{lian2024hierarchical,
+  title={Hierarchical Transformer-Based Red-Light Running Prediction Model for Two-Wheelers with Multitask Learning},
+  author={Lian, Yuansheng and Zhang, Ke and Li, Meng and Lin, Jingxian},
+  journal={IEEE Transactions on Intelligent Vehicles},
+  year={2024},
+  publisher={IEEE}
+}
+```
+
